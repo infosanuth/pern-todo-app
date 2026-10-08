@@ -31,5 +31,24 @@ router.get("/", async (req, res) => {
 })
 
 
+router.put("/:id", async (req, res) => {
+    try {
+        const { id } = req.params
+        const { description, completed } = req.body
+        const updateTodo = await pool.query(
+            "UPDATE todo SET description = $1, completed =$2 WHERE todo_id =$3 RETURNING *",
+            [description, completed, id]
+        );
+        if (updateTodo.rows.length === 0) {
+            return res.status(404).json({ msg: "Todo not found" })
+        }
+        res.json(updateTodo.rows[0])
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send("Server Error")
+    }
+})
+
+
 
 export default router;
