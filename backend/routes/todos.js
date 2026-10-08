@@ -10,7 +10,7 @@ router.post("/", async (req, res) => {
 
         const newTodo = await pool.query(
             "INSERT INTO todo (description, completed) VALUES ($1, $2) RETURNING *",
-            [description, completed || false]);
+            [description, completed ?? false]);
 
         res.json(newTodo.rows[0]);
 
@@ -19,5 +19,17 @@ router.post("/", async (req, res) => {
         res.status(500).send("Server Error")
     }
 })
+
+router.get("/", async (req, res) => {
+    try {
+        const allTodos = await pool.query("SELECT * FROM todo");
+        res.json(allTodos.rows);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send("Server Error")
+    }
+})
+
+
 
 export default router;
