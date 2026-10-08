@@ -49,6 +49,27 @@ router.put("/:id", async (req, res) => {
     }
 })
 
+router.delete("/:id", async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const deleteTodo = await pool.query(
+            "DELETE FROM todo WHERE todo_id = $1 RETURNING *",
+            [id]
+        );
+
+        if (deleteTodo.rows.length === 0) {
+            return res.status(404).json({ msg: "Todo not found" });
+        }
+
+        res.json({ msg: "Todo was deleted" });
+
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send("Server Error");
+    }
+});
+
 
 
 export default router;
