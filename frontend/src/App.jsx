@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 
 const App = () => {
@@ -16,10 +16,25 @@ const App = () => {
         completed: false
       })
       setDescription("")
+      getTodos();
     } catch (err) {
       console.log(err.message)
     }
   }
+
+  const getTodos = async () => {
+    try {
+      const res = await axios.get("http://localhost:5000/todos");
+      setTodos(res.data);
+      console.log(res.data)
+    } catch (err) {
+      console.log(err.message)
+    }
+  }
+
+  useEffect(() => {
+    getTodos();
+  }, []);
 
   return (
     <div className='min-h-screen bg-gray-800 p-4 flex justify-center items-center'>
@@ -29,6 +44,19 @@ const App = () => {
           <input className='flex-1 outline-none px-3 py-2 text-gray-700 placeholder-gray-400' type="text" value={description} onChange={(e) => setDescription(e.target.value)} placeholder='What needs to be done?' required />
           <button className='bg-blue-500 text-white px-4 py-2 rounded-md font-medium cursor-pointer'>Add Task</button>
         </form>
+        <div>
+          {todos.length === 0 ? (
+            <p className='text-gray-600'>No Tasks available. Add a new task!</p>
+          ) : (
+            <div>
+              {todos.map((todos) => (
+                <div>
+                  <span>{todos.description}</span>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
     </div>
 
