@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
+import {MdOutlineDone} from 'react-icons/md'
 
 const App = () => {
 
@@ -48,9 +49,15 @@ const App = () => {
           {todos.length === 0 ? (
             <p className='text-gray-600'>No Tasks available. Add a new task!</p>
           ) : (
-            <div>
+            <div className='flex flex-col'>
               {todos.map((todos) => (
-                <div>
+                <div className='flex gap-2 py-1'>
+                  <button className={`h-6 w-6 border-2 rounded-full flex items-center justify-center ${todos.completed 
+                    ? "bg-green-500 border-green-500 text-white" 
+                    : "border-gray-300 hover:border-blue-400"
+                    }`}>
+                      {todos.completed && <MdOutlineDone size={16}/>}
+                    </button>
                   <span>{todos.description}</span>
                 </div>
               ))}
