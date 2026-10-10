@@ -1,8 +1,37 @@
-import React from 'react'
+import React, { useState } from 'react'
+import axios from 'axios'
 
 const App = () => {
+
+  const [description, setDescription] = useState("")
+  const [todos, setTodos] = useState([])
+  const [editTodos, setEditTodos] = useState(null);
+  const [editText, setEditTest] = useState("")
+
+  const onsubmitForm = async (e) => {
+    e.preventDefault();
+    try {
+      await axios.post("http://localhost:5000/todos", {
+        description,
+        completed: false
+      })
+      setDescription("")
+    } catch (err) {
+      console.log(err.message)
+    }
+  }
+
   return (
-    <div className='min-h-screen bg-gray-800 flex justify-center items-center text-white'>PERN TODO APP</div>
+    <div className='min-h-screen bg-gray-800 p-4 flex justify-center items-center'>
+      <div className='bg-gray-50 rounded-2xl w-full max-w-lg p-8'>
+        <h1 className='text-4xl text-bold font-bold mb-8 justify-self-center'>PERN TODO APP</h1>
+        <form onSubmit={onsubmitForm} className='flex items-center gap-2 border p-2 rounded-lg mb-6'>
+          <input className='flex-1 outline-none px-3 py-2 text-gray-700 placeholder-gray-400' type="text" value={description} onChange={(e) => setDescription(e.target.value)} placeholder='What needs to be done?' required />
+          <button className='bg-blue-500 text-white px-4 py-2 rounded-md font-medium cursor-pointer'>Add Task</button>
+        </form>
+      </div>
+    </div>
+
   )
 }
 
